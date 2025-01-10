@@ -37,7 +37,6 @@ export class AppService {
       return { error: 400, message: 'invalid load object', data: datum }
     }
     try {
-      const dist = await this.getDistanceFromLatLonInKm(datum.pointA.lat,datum.pointA.lng,datum.pointB.lat,datum.pointB.lng)
       const insert = await this.prisma.load.create({
         data: {
           pointA: {
