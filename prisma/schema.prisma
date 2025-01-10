@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Change this if using a different database
+  url      = env("DATABASE_URL")
+}
+
+model Load {
+  id           Int        @id @default(autoincrement())
+  userName     String
+  email        String
+  rate         Float
+  instructions String
+  status       LoadStatus @default(Open)
+  pointAId     Int
+  pointBId     Int
+  pointA       Location   @relation("PointA", fields: [pointAId], references: [id])
+  pointB       Location   @relation("PointB", fields: [pointBId], references: [id])
+  distance     Float    @default(0)
+  bids         Bid[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Location {
+  id          Int      @id @default(autoincrement())
+  address     String
+  latitude    Float
+  longitude   Float
+  pointALoads Load[]   @relation("PointA")
+  pointBLoads Load[]   @relation("PointB")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+/**
+ * potencialmente a futuro una estructura arbol, si no existe ya? oferta contraoferta
+ */
+model Bid {
+  id        Int       @id @default(autoincrement())
+  loadId    Int
+  load      Load      @relation(fields: [loadId], references: [id])
+  userName  String
+  value     Float
+  status    BidStatus @default(Sent)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+enum LoadStatus {
+  Open
+  Close
+}
+
+enum BidStatus {
+  Sent
+  Accepted
+  Declined
+}
