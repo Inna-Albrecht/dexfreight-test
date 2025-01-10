@@ -57,8 +57,7 @@ export class AppService {
           email: datum.email,
           rate: datum.rate,
           instructions: datum.instructions,
-          status: LoadStatus.Open,
-          distance: dist
+          status: LoadStatus.Open
         }
       })
       console.log(insert)
